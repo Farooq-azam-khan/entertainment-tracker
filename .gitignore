@@ -9,3 +9,6 @@ elm.js
 
 # js gitignore
 node_modules
+
+# 
+.cache
