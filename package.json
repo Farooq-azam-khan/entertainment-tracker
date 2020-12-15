@@ -1,0 +1,25 @@
+{
+  "name": "entertainment-tracker",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:tailwindcss": "tailwindcss build ./src/styles.css -o tailwind.css", 
+    "build:elm": "elm make src/Main.elm --output=elm.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Farooq-azam-khan/entertainment-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Farooq-azam-khan/entertainment-tracker/issues"
+  },
+  "homepage": "https://github.com/Farooq-azam-khan/entertainment-tracker#readme",
+  "dependencies": {
+    "autoprefixer": "^10.1.0",
+    "postcss": "^8.2.1",
+    "tailwindcss": "^2.0.2"
+  }
+}
