@@ -29,7 +29,7 @@ update msg model =
 
 
 view model =
-    div [ class "bg-gray-900" ]
+    div [ class "bg-gray-100" ]
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model) ]
         , button [ onClick Increment ] [ text "+" ]
