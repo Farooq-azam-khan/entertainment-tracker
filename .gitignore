@@ -5,6 +5,7 @@ tailwind.css
 
 # elm gitignore
 elm-stuff
+elm.js 
 
 # js gitignore
 node_modules
