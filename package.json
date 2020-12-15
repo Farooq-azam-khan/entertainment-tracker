@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:tailwindcss": "tailwindcss build ./src/styles.css -o tailwind.css", 
+    "build:tailwindcss": "tailwindcss build ./src/styles.css -o ./src/tailwind.css", 
     "build:elm": "elm make src/Main.elm --output=elm.js"
   },
   "repository": {
