@@ -2,16 +2,21 @@ module Main exposing (Msg(..), main, update, view)
 
 import Browser
 import Html exposing (Html, button, div, text)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 
 
 main =
-    Browser.sandbox { init = 0, update = update, view = view }
+    Browser.sandbox { init = init, update = update, view = view }
 
 
 type Msg
     = Increment
     | Decrement
+
+
+init =
+    0
 
 
 update msg model =
@@ -24,7 +29,7 @@ update msg model =
 
 
 view model =
-    div []
+    div [ class "bg-gray-900" ]
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model) ]
         , button [ onClick Increment ] [ text "+" ]
