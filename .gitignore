@@ -1,5 +1,10 @@
 /target
 
+# tailwind 
+tailwind.css 
 
 # elm gitignore
 elm-stuff
+
+# js gitignore
+node_modules
