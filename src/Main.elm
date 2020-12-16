@@ -41,6 +41,7 @@ type Msg
     = ShowTracker
     | GotResponse (Result Http.Error String)
     | UpdateTitle String
+    | CreateEntertainment
 
 
 type OAuth
@@ -50,7 +51,7 @@ type OAuth
 
 
 type alias Model =
-    { tracker : List Entertainment, showTracker : Bool, githubOauth : OAuth }
+    { tracker : List Entertainment, showTracker : Bool, githubOauth : OAuth, newPlaceholderTitle : String }
 
 
 
@@ -74,7 +75,11 @@ githubOAuthLink =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { tracker = [ gameOfThrones ], showTracker = False, githubOauth = Loading }
+    ( { newPlaceholderTitle = ""
+      , tracker = [ gameOfThrones, gameOfThrones, gameOfThrones ]
+      , showTracker = True
+      , githubOauth = Loading
+      }
     , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
     )
 
@@ -106,8 +111,20 @@ update msg model =
             in
             ( { model | githubOauth = Failure }, Cmd.none )
 
-        UpdateTitle string ->
-            ( model, Cmd.none )
+        UpdateTitle value ->
+            ( { model | newPlaceholderTitle = value }, Cmd.none )
+
+        CreateEntertainment ->
+            if String.length model.newPlaceholderTitle == 0 then
+                ( model, Cmd.none )
+
+            else
+                ( { model
+                    | newPlaceholderTitle = ""
+                    , tracker = List.append model.tracker [ createBook model.newPlaceholderTitle (createAuthor "random fn" "random ln") ]
+                  }
+                , Cmd.none
+                )
 
 
 
@@ -116,52 +133,73 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "bg-gray-200" ]
+    div []
         [ css "tailwind.css"
-        , addEntertainment
-        , if model.showTracker then
-            showTracker model.tracker
+        , div
+            [ class "bg-gray-200" ]
+            [ addEntertainment model.newPlaceholderTitle
+            , if model.showTracker then
+                showTracker model.tracker
 
-          else
-            button
-                [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
-                , onClick ShowTracker
-                ]
-                [ text "Show Tracker" ]
+              else
+                button
+                    [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
+                    , onClick ShowTracker
+                    ]
+                    [ text "Show Tracker" ]
+            ]
         ]
 
 
-addEntertainment : Html Msg
-addEntertainment =
-    div [ class "bg-gray-200" ]
-        [ input [ placeholder "Title", value "", onInput UpdateTitle ] []
-        , button [] [ text "Add Entertainmet" ]
+addEntertainment : String -> Html Msg
+addEntertainment newPlaceholderTitle =
+    div [ class "flex space-x-2 justify-center rounded-md" ]
+        [ div [] [ input [ class "px-3 rounded-md w-full h-full", placeholder "Title", value newPlaceholderTitle, onInput UpdateTitle ] [] ]
+        , button
+            [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
+            , onClick CreateEntertainment
+            ]
+            [ text "Add Entertainmet" ]
         ]
 
 
 showTracker : List Entertainment -> Html Msg
 showTracker tracker =
-    div [ class "mt-10 grid" ]
+    div [ class "mt-10 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4" ]
         (List.map
             renderEntertainment
             tracker
         )
 
 
+badge : String -> Html Msg
+badge t =
+    span [ class "flex items-center justify-center bg-green-200 text-green-900 rounded-full px-2 py-1 text-sm font-semibold" ] [ text t ]
+
+
 renderEntertainment : Entertainment -> Html Msg
 renderEntertainment enter =
-    case enter of
-        Book title _ ->
-            div []
-                [ text "Book: "
-                , text title
-                ]
+    div [ class "bg-white shadow-md px-2 py-1 rounded-md" ]
+        [ case enter of
+            Book title author ->
+                div [ class "flex flex-row sm:flex-col sm:space-y-1 space-x-2 align-baseline justify-between px-1" ]
+                    [ span [ class "flex space-x-3" ]
+                        [ badge "Book"
+                        , span [] [ text title ]
+                        ]
+                    , a
+                        [ class "underline text-indigo-900"
+                        , href "#"
+                        ]
+                        [ text (authorFullName author) ]
+                    ]
 
-        Movie title ->
-            div [] [ text "Movie:", text title ]
+            Movie title ->
+                div [] [ text "Movie:", text title ]
 
-        Play title _ ->
-            div [] [ text title ]
+            Play title _ ->
+                div [] [ text title ]
 
-        TV title ->
-            div [] [ text title ]
+            TV title ->
+                div [] [ text title ]
+        ]
