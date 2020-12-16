@@ -10,8 +10,18 @@ createAuthor fn ln =
     { firstname = fn, lastname = ln }
 
 
+authorFullName : Author -> String
+authorFullName author =
+    author.firstname ++ " " ++ author.lastname
+
+
 type Entertainment
     = Book String Author
     | Movie String
     | Play String Author
     | TV String
+
+
+createBook : String -> Author -> Entertainment
+createBook title author =
+    Book title author
