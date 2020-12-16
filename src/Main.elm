@@ -118,7 +118,11 @@ view model =
             showTracker model.tracker
 
           else
-            button [ onClick ShowTracker ] [ text "Show Tracker" ]
+            button
+                [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
+                , onClick ShowTracker
+                ]
+                [ text "Show Tracker" ]
         ]
 
 
