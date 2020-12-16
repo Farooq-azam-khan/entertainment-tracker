@@ -2,11 +2,12 @@
   "name": "entertainment-tracker",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "electron_main.js",
   "scripts": {
     "build:tailwindcss": "tailwindcss build ./src/styles.css -o ./src/tailwind.css",
-    "dev": "parcel ./src/index.html"
     "build:elm": "cd src & elm make Main.elm --output=elm.js",
+    "dev": "parcel ./src/index.html",
+    "electron": "electron electron.js"
   },
   "license": "ISC",
   "dependencies": {},
