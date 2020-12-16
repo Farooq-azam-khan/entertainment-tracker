@@ -5,6 +5,7 @@ import Html exposing (Html, button, div, pre, text)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Http
+import Types exposing (..)
 
 
 
@@ -29,34 +30,26 @@ subscriptions model =
 
 
 type Msg
-    = Increment
-    | Decrement
-    | Increment2
-    | Decrement2
-    | GotText (Result Http.Error String)
-
-
-type Book
-    = Failure
-    | Loading
-    | Success String
+    = ShowTracker
 
 
 type alias Model =
-    { counter : Int, book : Book }
+    { tracker : List Entertainment, showTracker : Bool }
 
 
 
 -- init
 
 
+gameOfThrones : Entertainment
+gameOfThrones =
+    Book "Game of Thrones" (createAuthor "George" "Martin")
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { counter = 0, book = Loading }
-    , Http.get
-        { url = "https://elm-lang.org/assets/public-opinion.txt"
-        , expect = Http.expectString GotText
-        }
+    ( { tracker = [ gameOfThrones ], showTracker = False }
+    , Cmd.none
     )
 
 
@@ -67,25 +60,8 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Increment ->
-            ( { model | counter = model.counter + 1 }, Cmd.none )
-
-        Decrement ->
-            ( { model | counter = model.counter - 1 }, Cmd.none )
-
-        Increment2 ->
-            ( { model | counter = model.counter + 2 }, Cmd.none )
-
-        Decrement2 ->
-            ( { model | counter = model.counter - 2 }, Cmd.none )
-
-        GotText result ->
-            case result of
-                Ok fullText ->
-                    ( { model | book = Success fullText }, Cmd.none )
-
-                Err _ ->
-                    ( { model | book = Failure }, Cmd.none )
+        ShowTracker ->
+            ( { model | showTracker = True }, Cmd.none )
 
 
 
@@ -94,31 +70,15 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "bg-gray-100" ]
-        [ displayCounter model.counter
-        , displayBook model.book
-        ]
-
-
-displayCounter : Int -> Html Msg
-displayCounter counter =
     div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , button [ onClick Decrement2 ] [ text "-2" ]
-        , div [] [ text (String.fromInt counter) ]
-        , button [ onClick Increment ] [ text "+" ]
-        , button [ onClick Increment2 ] [ text "+2" ]
+        [ if model.showTracker then
+            showTracker model.tracker
+
+          else
+            button [ onClick ShowTracker ] [ text "Show Tracker" ]
         ]
 
 
-displayBook : Book -> Html Msg
-displayBook book =
-    case book of
-        Failure ->
-            text "unable to get book"
-
-        Loading ->
-            text " loading book "
-
-        Success fullText ->
-            pre [] [ text fullText ]
+showTracker : List Entertainment -> Html Msg
+showTracker tracker =
+    div [] [ text "todo" ]
