@@ -31,10 +31,17 @@ subscriptions model =
 
 type Msg
     = ShowTracker
+    | GotResponse (Result Http.Error String)
+
+
+type OAuth
+    = Success String
+    | Failure
+    | Loading
 
 
 type alias Model =
-    { tracker : List Entertainment, showTracker : Bool }
+    { tracker : List Entertainment, showTracker : Bool, githubOauth : OAuth }
 
 
 
@@ -46,10 +53,20 @@ gameOfThrones =
     Book "Game of Thrones" (createAuthor "George" "Martin")
 
 
+client_id : String
+client_id =
+    "abc"
+
+
+githubOAuthLink : String
+githubOAuthLink =
+    "https://github.com/login/oauth/authorize?client_id=" ++ client_id
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { tracker = [ gameOfThrones ], showTracker = False }
-    , Cmd.none
+    ( { tracker = [ gameOfThrones ], showTracker = False, githubOauth = Loading }
+    , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
     )
 
 
@@ -62,6 +79,23 @@ update msg model =
     case msg of
         ShowTracker ->
             ( { model | showTracker = True }, Cmd.none )
+
+        GotResponse (Ok result) ->
+            let
+                _ =
+                    Debug.log "Successfully got message"
+
+                _ =
+                    Debug.log result
+            in
+            ( { model | githubOauth = Success result }, Cmd.none )
+
+        GotResponse (Err txt) ->
+            let
+                _ =
+                    Debug.log "an error occured"
+            in
+            ( { model | githubOauth = Failure }, Cmd.none )
 
 
 
