@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Rust and Elm</title>
+  <meta name="description" content="Rust and Elm">
+  <meta name="author" content="Relm">
+  <script src="./elm.js"></script>
+</head>
+
+<body>
+  <div id="elm-container"></div>
+  <script>
+
+
+    const node = document.querySelector('#elm-container')
+    if (node) {
+      Elm.Main.init({ node })
+    }
+
+  </script>
+
+</body>
+
+</html>

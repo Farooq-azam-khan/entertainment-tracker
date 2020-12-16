@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build:tailwindcss": "tailwindcss build ./src/styles.css -o ./src/tailwind.css",
-    "build:elm": "elm make src/Main.elm --output=./src/elm.js",
     "dev": "parcel ./src/index.html"
+    "build:elm": "cd src & elm make Main.elm --output=elm.js",
   },
   "license": "ISC",
   "dependencies": {},
