@@ -8,16 +8,7 @@
     "build:elm": "elm make src/Main.elm --output=elm.js",
     "dev": "parcel ./src/index.html"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Farooq-azam-khan/entertainment-tracker.git"
-  },
-  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Farooq-azam-khan/entertainment-tracker/issues"
-  },
-  "homepage": "https://github.com/Farooq-azam-khan/entertainment-tracker#readme",
   "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^10.1.0",
