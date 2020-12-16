@@ -1,4 +1,4 @@
-module Main exposing (Msg(..), main, update, view)
+module Main exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, pre, text)
@@ -7,17 +7,25 @@ import Html.Events exposing (onClick)
 import Http
 
 
+
+-- Main
+
+
 main =
     Browser.element { init = init, update = update, view = view, subscriptions = subscriptions }
 
 
 
--- subscriptions
+-- Subscriptions
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
+
+
+
+-- Types
 
 
 type Msg
@@ -38,6 +46,10 @@ type alias Model =
     { counter : Int, book : Book }
 
 
+
+-- init
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { counter = 0, book = Loading }
@@ -46,6 +58,10 @@ init _ =
         , expect = Http.expectString GotText
         }
     )
+
+
+
+-- update
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -72,18 +88,23 @@ update msg model =
                     ( { model | book = Failure }, Cmd.none )
 
 
+
+-- views
+
+
 view : Model -> Html Msg
 view model =
     div [ class "bg-gray-100" ]
-        [ button [ onClick Decrement ] [ text "-" ]
+        [displayCounter model.counter
+        , displayBook model.book
+        ]
+
+displayCounter : Int -> Html Msg 
+displayCounter counter =  button [ onClick Decrement ] [ text "-" ]
         , button [ onClick Decrement2 ] [ text "-2" ]
         , div [] [ text (String.fromInt model.counter) ]
         , button [ onClick Increment ] [ text "+" ]
         , button [ onClick Increment2 ] [ text "+2" ]
-        , displayBook model.book
-        ]
-
-
 displayBook : Book -> Html Msg
 displayBook book =
     case book of
