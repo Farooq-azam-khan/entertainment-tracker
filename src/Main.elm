@@ -1,11 +1,19 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, pre, text)
-import Html.Attributes exposing (class)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Http
 import Types exposing (..)
+
+
+
+-- tailwindcss
+
+
+css path =
+    node "link" [ rel "stylesheet", href path ] []
 
 
 
@@ -105,7 +113,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ if model.showTracker then
+        [ css "./tailwind.css"
+        , if model.showTracker then
             showTracker model.tracker
 
           else
