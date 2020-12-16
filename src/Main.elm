@@ -9,6 +9,14 @@ import Types exposing (..)
 
 
 
+-- tailwindcss
+
+
+css path =
+    node "link" [ rel "stylesheet", href path ] []
+
+
+
 -- Main
 
 
@@ -42,7 +50,7 @@ type OAuth
 
 
 type alias Model =
-    { tracker : List Entertainment, showTracker : Bool }
+    { tracker : List Entertainment, showTracker : Bool, githubOauth : OAuth }
 
 
 
@@ -64,14 +72,10 @@ githubOAuthLink =
     "https://github.com/login/oauth/authorize?client_id=" ++ client_id
 
 
-fetchOauth =
-    Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
-
-
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { tracker = [ gameOfThrones ], showTracker = True, githubOauth = Loading }
-    , Cmd.none
+    ( { tracker = [ gameOfThrones ], showTracker = False, githubOauth = Loading }
+    , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
     )
 
 
@@ -118,7 +122,11 @@ view model =
             showTracker model.tracker
 
           else
-            button [ onClick ShowTracker ] [ text "Show Tracker" ]
+            button
+                [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
+                , onClick ShowTracker
+                ]
+                [ text "Show Tracker" ]
         ]
 
 
