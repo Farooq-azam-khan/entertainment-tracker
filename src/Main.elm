@@ -1,10 +1,10 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, input, pre, text)
+import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput)
-import Http
+import Html.Events exposing (..)
+import Http exposing (..)
 import Types exposing (..)
 
 
@@ -116,8 +116,9 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ addEntertainment
+    div [ class "bg-gray-200" ]
+        [ css "tailwind.css"
+        , addEntertainment
         , if model.showTracker then
             showTracker model.tracker
 
@@ -132,7 +133,7 @@ view model =
 
 addEntertainment : Html Msg
 addEntertainment =
-    div []
+    div [ class "bg-gray-200" ]
         [ input [ placeholder "Title", value "", onInput UpdateTitle ] []
         , button [] [ text "Add Entertainmet" ]
         ]
@@ -140,7 +141,7 @@ addEntertainment =
 
 showTracker : List Entertainment -> Html Msg
 showTracker tracker =
-    div []
+    div [ class "mt-10 grid" ]
         (List.map
             renderEntertainment
             tracker
@@ -152,7 +153,7 @@ renderEntertainment enter =
     case enter of
         Book title _ ->
             div []
-                [ text "Book:"
+                [ text "Book: "
                 , text title
                 ]
 
