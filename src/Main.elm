@@ -95,16 +95,22 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "bg-gray-100" ]
-        [displayCounter model.counter
+        [ displayCounter model.counter
         , displayBook model.book
         ]
 
-displayCounter : Int -> Html Msg 
-displayCounter counter =  button [ onClick Decrement ] [ text "-" ]
+
+displayCounter : Int -> Html Msg
+displayCounter counter =
+    div []
+        [ button [ onClick Decrement ] [ text "-" ]
         , button [ onClick Decrement2 ] [ text "-2" ]
-        , div [] [ text (String.fromInt model.counter) ]
+        , div [] [ text (String.fromInt counter) ]
         , button [ onClick Increment ] [ text "+" ]
         , button [ onClick Increment2 ] [ text "+2" ]
+        ]
+
+
 displayBook : Book -> Html Msg
 displayBook book =
     case book of
