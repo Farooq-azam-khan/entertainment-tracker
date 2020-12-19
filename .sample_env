@@ -1,2 +1,3 @@
 MY_SECRET = "this is a secrect that i will take to my grave"
-GITHUB_CLIENT_ID = github.com
+GITHUB_CLIENT_ID = asdf
+GITHUB_CLIENT_SECRET = asdf
