@@ -10,6 +10,7 @@ use dotenv::dotenv;
 use std::env;
 
 use std::collections::HashMap;
+
 #[get("/my-secret")]
 fn get_secret() -> String {
         String::from(env::var("MY_SECRET").unwrap().as_str())
@@ -26,6 +27,7 @@ fn github_oauth() -> Redirect {
 
         Redirect::to(github)
 }
+
 fn get_access_token(code: String) {
         let github = "https://github.com/login/oauth/access_token";
         /*
@@ -44,7 +46,7 @@ fn get_access_token(code: String) {
         map.insert("client_id", client_id.as_str());
         map.insert("client_secret", client_secret.as_str());
         map.insert("code", code.as_str());
-        map.insert("redirect_uri", "http://localhost:8001/success");
+        // map.insert("redirect_uri", "http://localhost:8001/success");
         let client = reqwest::blocking::Client::new();
         let res = client
                 .post(github)
@@ -53,14 +55,22 @@ fn get_access_token(code: String) {
                 .send();
 
         println!("{:?}", res);
+
+        // TODO: return access token
+        // match res.status() {
+        //         reqwest::StatusCode::Ok =>
+        // }
 }
+
+#[get("/login/github/callback?<code>")]
 fn github_callback(code: Option<String>) -> Result<String, Box<dyn std::error::Error>> {
         match code {
-                Some(token) => get_access_token(token),
+                Some(token) => get_access_token(token), // TODO: return json token
                 None => println!("no code provided"),
         };
         Ok(String::from("will check some stuff now"))
 }
+
 #[get("/")]
 fn index() -> &'static str {
         "Hello, World"
@@ -71,12 +81,7 @@ fn main() {
         rocket::ignite()
                 .mount(
                         "/",
-                        routes![
-                                index,
-                                get_secret,
-                                github_oauth,
-                                github_callback,
-                        ],
+                        routes![index, get_secret, github_oauth, github_callback,],
                 )
                 .launch();
 }
