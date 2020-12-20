@@ -21,15 +21,10 @@ parseUrl url =
             NotFound
 
 
-urlHead : String
-urlHead =
-    "Main.elm"
-
-
 matchRoute : Parser (Route -> a) a
 matchRoute =
     Parser.oneOf
-        [ Parser.map HomePage (Parser.s urlHead)
-        , Parser.map Login (Parser.s urlHead </> Parser.s "login" </> Parser.string)
-        , Parser.map LoginPage (Parser.s urlHead </> Parser.s "login")
+        [ Parser.map HomePage (Parser.s "")
+        , Parser.map Login (Parser.s "login" </> Parser.string)
+        , Parser.map LoginPage (Parser.s "login")
         ]
