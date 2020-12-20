@@ -10,6 +10,8 @@ extern crate dotenv;
 use dotenv::dotenv;
 use std::env;
 
+use rocket_cors::AllowedHeaders;
+
 use std::collections::HashMap;
 
 #[get("/my-secret")]
@@ -79,6 +81,8 @@ fn index() -> &'static str {
 
 fn main() {
         dotenv().ok();
+        let all_headers = AllowedHeaders::all();
+
         rocket::ignite()
                 .mount(
                         "/",
