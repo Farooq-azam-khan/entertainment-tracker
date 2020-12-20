@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation exposing (Key, load, pushUrl)
@@ -18,6 +18,14 @@ import Url exposing (Url)
 
 css path =
     node "link" [ rel "stylesheet", href path ] []
+
+
+
+-- flags
+
+
+type alias Flags =
+    { storedToken : Maybe String }
 
 
 
@@ -98,25 +106,31 @@ githubOAuthLink =
 -- init
 
 
-init : () -> Url -> Key -> ( Model, Cmd Msg )
-init _ url key =
+init : Flags -> Url -> Key -> ( Model, Cmd Msg )
+init flags url key =
     let
         _ =
-            Debug.log "the url" url
+            Debug.log "flags" flags
 
+        -- _ =
+        --     Debug.log "the url" url
         page =
             Route.parseUrl url
 
-        _ =
-            Debug.log "parsed url" page
-
+        -- _ =
+        --     Debug.log "at init parsed url" page
         token =
             case page of
                 Route.Login (Just githubToken) ->
                     Just (Token githubToken)
 
                 _ ->
-                    Nothing
+                    case flags.storedToken of
+                        Just githubToken ->
+                            Just (Token githubToken)
+
+                        Nothing ->
+                            Nothing
 
         model =
             { newPlaceholderTitle = ""
@@ -129,9 +143,21 @@ init _ url key =
 
         _ =
             Debug.log "initial model" model
+
+        commands =
+            case token of
+                Just (Token tok) ->
+                    let
+                        _ =
+                            Debug.log "sending token to storage" tok
+                    in
+                    sendTokenToStorage tok
+
+                Nothing ->
+                    Cmd.none
     in
     ( model
-    , Cmd.none
+    , commands
     )
 
 
@@ -178,8 +204,16 @@ update msg model =
 
                 _ =
                     Debug.log "parsed url" newroute
+
+                token =
+                    case newroute of
+                        Route.Login (Just tok) ->
+                            Just (Token tok)
+
+                        _ ->
+                            Nothing
             in
-            ( { model | route = newroute }, Cmd.none )
+            ( { model | route = newroute, token = token }, Cmd.none )
 
 
 
@@ -290,3 +324,6 @@ renderEntertainment enter =
             TV title ->
                 div [] [ text title ]
         ]
+
+
+port sendTokenToStorage : String -> Cmd msg

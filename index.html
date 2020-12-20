@@ -16,8 +16,17 @@
   <main id="elm-container"></main>
   <script>
     const node = document.querySelector('#elm-container')
+    const TOKEN_KEY = '__ENTERTAINMENT_TRACKER__'
     if (node) {
-      Elm.Main.init({ node })
+      const app = Elm.Main.init({
+        node,
+        flags: {
+          storedToken: localStorage.getItem(TOKEN_KEY)
+        }
+      })
+      app.ports.sendTokenToStorage.subscribe(token => {
+        localStorage.setItem(TOKEN_KEY, token)
+      })
     }
   </script>
 
