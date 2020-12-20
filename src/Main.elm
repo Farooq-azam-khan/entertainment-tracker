@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest)
-import Browser.Navigation exposing (Key)
+import Browser.Navigation exposing (Key, load, pushUrl)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -62,31 +62,19 @@ subscriptions model =
 
 type Msg
     = ShowTracker
-    | GotResponse (Result Http.Error String)
     | UpdateTitle String
     | CreateEntertainment
-    | GithubOauth
     | LinkClicked UrlRequest
-
-
-type OAuth
-    = Success String
-    | Failure
-    | Loading
 
 
 type alias Model =
     { tracker : List Entertainment
     , showTracker : Bool
-    , githubOauth : OAuth
+    , token : Maybe Token
     , newPlaceholderTitle : String
     , key : Key
     , route : Route
     }
-
-
-
--- init
 
 
 gameOfThrones : Entertainment
@@ -104,30 +92,45 @@ githubOAuthLink =
     "https://github.com/login/oauth/authorize?client_id=" ++ client_id
 
 
-getAccessToken : Cmd Msg
-getAccessToken =
-    Http.get
-        { url = githubOAuthLink
-        , expect = Http.expectString GotResponse
-        }
+
+-- init
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init _ url key =
-    ( { newPlaceholderTitle = ""
-      , route = Route.parseUrl url
-      , tracker = [ gameOfThrones, gameOfThrones, gameOfThrones ]
-      , showTracker = True
-      , githubOauth = Loading
-      , key = key
-      }
-      -- , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
+    let
+        _ =
+            Debug.log "the url" url
+
+        page =
+            Route.parseUrl url
+
+        _ =
+            Debug.log "parsed url" page
+
+        token =
+            case page of
+                Route.Login githubToken ->
+                    Just (Token githubToken)
+
+                _ ->
+                    Nothing
+
+        model =
+            { newPlaceholderTitle = ""
+            , route = Route.parseUrl url
+            , tracker = []
+            , showTracker = False
+            , token = token
+            , key = key
+            }
+
+        _ =
+            Debug.log "initial model" model
+    in
+    ( model
     , Cmd.none
     )
-
-
-
--- update
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -135,23 +138,6 @@ update msg model =
     case msg of
         ShowTracker ->
             ( { model | showTracker = True }, Cmd.none )
-
-        GotResponse (Ok result) ->
-            let
-                _ =
-                    Debug.log "Successfully got message" result
-
-                _ =
-                    Debug.log result
-            in
-            ( { model | githubOauth = Success result }, Cmd.none )
-
-        GotResponse (Err txt) ->
-            let
-                _ =
-                    Debug.log "an error occured" txt
-            in
-            ( { model | githubOauth = Failure }, Cmd.none )
 
         UpdateTitle value ->
             ( { model | newPlaceholderTitle = value }, Cmd.none )
@@ -168,34 +154,42 @@ update msg model =
                 , Cmd.none
                 )
 
-        GithubOauth ->
-            ( model, getAccessToken )
-
         LinkClicked url ->
             let
                 _ =
                     Debug.log "linke clicked" url
             in
-            ( model, Cmd.none )
+            case url of
+                Browser.Internal internalUrl ->
+                    ( model, pushUrl model.key (Url.toString internalUrl) )
+
+                Browser.External href ->
+                    ( model, load href )
 
 
 
--- views
+-- view
 
 
 view : Model -> Document Msg
 view model =
-    { title = "Home Page"
+    { title =
+        case model.route of
+            Route.HomePage ->
+                "Home Page"
+
+            Route.LoginPage ->
+                "Login Page"
+
+            Route.Login _ ->
+                "nothing to see here"
+
+            Route.NotFound ->
+                "Page not found"
     , body =
         [ div []
-            [ css "tailwind.css"
-            , div [ class "flex w-screen items-center h-screen justify-center" ]
-                [ button
-                    [ class "bg-red-900 text-white px-5 py-3 rounded-full text-lg shadow-xl"
-                    , onClick GithubOauth
-                    ]
-                    [ text "Login with Github" ]
-                ]
+            [ css "http://localhost:8000/tailwind.css"
+            , showGithubButton model
             , div
                 [ class "bg-gray-200" ]
                 [ addEntertainment model.newPlaceholderTitle
@@ -212,6 +206,22 @@ view model =
             ]
         ]
     }
+
+
+showGithubButton : Model -> Html Msg
+showGithubButton model =
+    case model.token of
+        Just tok ->
+            div [] [ text "welcome you are logged in" ]
+
+        Nothing ->
+            div [ class "flex w-screen items-center h-screen justify-center" ]
+                [ a
+                    [ class "bg-red-900 text-white px-5 py-3 rounded-full text-lg shadow-xl"
+                    , href githubOAuthLink
+                    ]
+                    [ text "Login with Github" ]
+                ]
 
 
 addEntertainment : String -> Html Msg
