@@ -60,10 +60,8 @@ fn github_callback(code: Option<String>) -> Redirect {
                         match access_token {
                                 Some(at) => {
                                         // let jsonToken = content::Json(at);
-                                        let redirect_to_frontend = format!(
-                                                "http://localhost:8000/Main.elm/login/{}",
-                                                at
-                                        );
+                                        let redirect_to_frontend =
+                                                format!("http://localhost:8000/login?{}", at);
                                         println!("sending back to {}", redirect_to_frontend);
                                         Redirect::to(redirect_to_frontend)
                                 }
