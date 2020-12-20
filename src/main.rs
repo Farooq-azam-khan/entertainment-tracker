@@ -2,6 +2,7 @@
 
 #[macro_use]
 extern crate rocket;
+use rocket::response::content;
 use rocket::response::Redirect;
 
 extern crate dotenv;
@@ -28,47 +29,47 @@ fn github_oauth() -> Redirect {
         Redirect::to(github)
 }
 
-fn get_access_token(code: String) {
+fn get_access_token(code: String) -> Option<String> {
         let github = "https://github.com/login/oauth/access_token";
-        /*
-        headers {
-                "Content-Type": "application/json"
-        },
-        body: {
-                "client_id": env::var("GITHUB_CLIENT_ID").unwrap().as_str(),
-                "client_secret": env::var("GITHUB_CLIENT_SECRET").unwrap().as_str(),
-                "code": code.as_str()
-        }
-        */
         let mut map = HashMap::new();
         let client_id = env::var("GITHUB_CLIENT_ID").unwrap();
         let client_secret = env::var("GITHUB_CLIENT_SECRET").unwrap();
         map.insert("client_id", client_id.as_str());
         map.insert("client_secret", client_secret.as_str());
         map.insert("code", code.as_str());
-        // map.insert("redirect_uri", "http://localhost:8001/success");
         let client = reqwest::blocking::Client::new();
         let res = client
                 .post(github)
                 .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
                 .json(&map)
                 .send();
-
-        println!("{:?}", res);
-
-        // TODO: return access token
-        // match res.status() {
-        //         reqwest::StatusCode::Ok =>
-        // }
+        match res {
+                Ok(response) => {
+                        println!("success");
+                        match response.text() {
+                                Ok(access_token) => Some(access_token),
+                                Err(_err) => None,
+                        }
+                }
+                Err(_err) => None,
+        }
 }
 
 #[get("/login/github/callback?<code>")]
-fn github_callback(code: Option<String>) -> Result<String, Box<dyn std::error::Error>> {
+fn github_callback(code: Option<String>) -> content::Json<String> {
         match code {
-                Some(token) => get_access_token(token), // TODO: return json token
-                None => println!("no code provided"),
-        };
-        Ok(String::from("will check some stuff now"))
+                Some(token) => {
+                        let access_token = get_access_token(token);
+                        match access_token {
+                                Some(at) => content::Json(at),
+                                None => content::Json(String::from(
+                                        "{'error': 'did not successfully retrieve access token'}",
+                                )),
+                        }
+                }
+                None => content::Json(String::from("{'error': 'could not find code'}")),
+        }
 }
 
 #[get("/")]
