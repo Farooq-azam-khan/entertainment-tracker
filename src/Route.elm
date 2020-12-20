@@ -1,13 +1,13 @@
 module Route exposing (Route(..), parseUrl)
 
 import Url exposing (Url)
-import Url.Parser as Parser exposing ((</>), Parser)
+import Url.Parser as Parser exposing ((</>), (<?>), Parser, s)
+import Url.Parser.Query as Query
 
 
 type Route
     = NotFound
-    | Login String
-    | LoginPage
+    | Login (Maybe String)
     | HomePage
 
 
@@ -24,7 +24,6 @@ parseUrl url =
 matchRoute : Parser (Route -> a) a
 matchRoute =
     Parser.oneOf
-        [ Parser.map HomePage (Parser.s "")
-        , Parser.map Login (Parser.s "login" </> Parser.string)
-        , Parser.map LoginPage (Parser.s "login")
+        [ Parser.map HomePage (s "/home")
+        , Parser.map Login (s "login" <?> Query.string "access_token")
         ]
