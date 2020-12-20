@@ -2,15 +2,12 @@
 
 #[macro_use]
 extern crate rocket;
-use rocket::response::content;
 use rocket::response::Redirect;
 
 extern crate dotenv;
 
 use dotenv::dotenv;
 use std::env;
-
-use rocket_cors::AllowedHeaders;
 
 use std::collections::HashMap;
 
@@ -43,34 +40,37 @@ fn get_access_token(code: String) -> Option<String> {
         let res = client
                 .post(github)
                 .header("Content-Type", "application/json")
-                .header("Accept", "application/json")
+                // .header("Accept", "application/json")
                 .json(&map)
                 .send();
         match res {
-                Ok(response) => {
-                        println!("success");
-                        match response.text() {
-                                Ok(access_token) => Some(access_token),
-                                Err(_err) => None,
-                        }
-                }
+                Ok(response) => match response.text() {
+                        Ok(access_token) => Some(access_token),
+                        Err(_err) => None,
+                },
                 Err(_err) => None,
         }
 }
 
 #[get("/login/github/callback?<code>")]
-fn github_callback(code: Option<String>) -> content::Json<String> {
+fn github_callback(code: Option<String>) -> Redirect {
         match code {
                 Some(token) => {
                         let access_token = get_access_token(token);
                         match access_token {
-                                Some(at) => content::Json(at),
-                                None => content::Json(String::from(
-                                        "{'error': 'did not successfully retrieve access token'}",
-                                )),
+                                Some(at) => {
+                                        // let jsonToken = content::Json(at);
+                                        let redirect_to_frontend = format!(
+                                                "http://localhost:8000/Main.elm/login/{}",
+                                                at
+                                        );
+                                        println!("sending back to {}", redirect_to_frontend);
+                                        Redirect::to(redirect_to_frontend)
+                                }
+                                None => Redirect::to("http://localhost:8000/Main.elm"),
                         }
                 }
-                None => content::Json(String::from("{'error': 'could not find code'}")),
+                None => Redirect::to("http://localhost:8000/Main.elm"),
         }
 }
 
@@ -81,7 +81,6 @@ fn index() -> &'static str {
 
 fn main() {
         dotenv().ok();
-        let all_headers = AllowedHeaders::all();
 
         rocket::ignite()
                 .mount(
