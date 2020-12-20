@@ -15,6 +15,10 @@ authorFullName author =
     author.firstname ++ " " ++ author.lastname
 
 
+type Token
+    = Token String
+
+
 type Entertainment
     = Book String Author
     | Movie String
