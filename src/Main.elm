@@ -1,11 +1,14 @@
 module Main exposing (main)
 
-import Browser
+import Browser exposing (Document, UrlRequest)
+import Browser.Navigation exposing (Key)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
+import Route exposing (Route)
 import Types exposing (..)
+import Url exposing (Url)
 
 
 
@@ -21,7 +24,27 @@ css path =
 
 
 main =
-    Browser.element { init = init, update = update, view = view, subscriptions = subscriptions }
+    Browser.application
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        , onUrlRequest = LinkClicked
+        , onUrlChange = onUrlChange
+        }
+
+
+
+-- url change
+
+
+onUrlChange : Url -> Msg
+onUrlChange url =
+    let
+        _ =
+            Debug.log "changed url" url
+    in
+    ShowTracker
 
 
 
@@ -43,6 +66,7 @@ type Msg
     | UpdateTitle String
     | CreateEntertainment
     | GithubOauth
+    | LinkClicked UrlRequest
 
 
 type OAuth
@@ -52,7 +76,13 @@ type OAuth
 
 
 type alias Model =
-    { tracker : List Entertainment, showTracker : Bool, githubOauth : OAuth, newPlaceholderTitle : String }
+    { tracker : List Entertainment
+    , showTracker : Bool
+    , githubOauth : OAuth
+    , newPlaceholderTitle : String
+    , key : Key
+    , route : Route
+    }
 
 
 
@@ -66,12 +96,12 @@ gameOfThrones =
 
 client_id : String
 client_id =
-    "abc"
+    "165a569192ce7a520b0a"
 
 
 githubOAuthLink : String
 githubOAuthLink =
-    "http://localhost:8001/login/github"
+    "https://github.com/login/oauth/authorize?client_id=" ++ client_id
 
 
 getAccessToken : Cmd Msg
@@ -82,12 +112,14 @@ getAccessToken =
         }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : () -> Url -> Key -> ( Model, Cmd Msg )
+init _ url key =
     ( { newPlaceholderTitle = ""
+      , route = Route.parseUrl url
       , tracker = [ gameOfThrones, gameOfThrones, gameOfThrones ]
       , showTracker = True
       , githubOauth = Loading
+      , key = key
       }
       -- , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
     , Cmd.none
@@ -139,36 +171,47 @@ update msg model =
         GithubOauth ->
             ( model, getAccessToken )
 
+        LinkClicked url ->
+            let
+                _ =
+                    Debug.log "linke clicked" url
+            in
+            ( model, Cmd.none )
+
 
 
 -- views
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-    div []
-        [ css "tailwind.css"
-        , div [ class "flex w-screen items-center h-screen justify-center" ]
-            [ button
-                [ class "bg-red-900 text-white px-5 py-3 rounded-full text-lg shadow-xl"
-                , onClick GithubOauth
-                ]
-                [ text "Login with Github" ]
-            ]
-        , div
-            [ class "bg-gray-200" ]
-            [ addEntertainment model.newPlaceholderTitle
-            , if model.showTracker then
-                showTracker model.tracker
-
-              else
-                button
-                    [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
-                    , onClick ShowTracker
+    { title = "Home Page"
+    , body =
+        [ div []
+            [ css "tailwind.css"
+            , div [ class "flex w-screen items-center h-screen justify-center" ]
+                [ button
+                    [ class "bg-red-900 text-white px-5 py-3 rounded-full text-lg shadow-xl"
+                    , onClick GithubOauth
                     ]
-                    [ text "Show Tracker" ]
+                    [ text "Login with Github" ]
+                ]
+            , div
+                [ class "bg-gray-200" ]
+                [ addEntertainment model.newPlaceholderTitle
+                , if model.showTracker then
+                    showTracker model.tracker
+
+                  else
+                    button
+                        [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
+                        , onClick ShowTracker
+                        ]
+                        [ text "Show Tracker" ]
+                ]
             ]
         ]
+    }
 
 
 addEntertainment : String -> Html Msg
