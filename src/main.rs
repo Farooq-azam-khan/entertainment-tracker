@@ -67,7 +67,7 @@ fn github_callback(code: Option<String>) -> Redirect {
                                         println!("sending back to {}", redirect_to_frontend);
                                         Redirect::to(redirect_to_frontend)
                                 }
-                                None => Redirect::to("http://localhost:8000/Main.elm"),
+                                None => Redirect::to("http://localhost:8000"),
                         }
                 }
                 None => Redirect::to("http://localhost:8000/Main.elm"),
