@@ -228,15 +228,13 @@ view model =
                 "Home Page"
 
             Route.Login _ ->
-                "nothing to see here"
+                "Login Oauth"
 
             Route.NotFound ->
                 "Page not found"
     , body =
         [ div []
             [ css "http://localhost:8000/tailwind.css"
-            , a [ href "/login", class "px-2 py-2 hover:bg-shadow-xl" ] [ text "login" ]
-            , a [ href "/" ] [ text "home" ]
             , showGithubButton model
             , div
                 [ class "bg-gray-200" ]
