@@ -42,6 +42,7 @@ type Msg
     | GotResponse (Result Http.Error String)
     | UpdateTitle String
     | CreateEntertainment
+    | GithubOauth
 
 
 type OAuth
@@ -70,7 +71,15 @@ client_id =
 
 githubOAuthLink : String
 githubOAuthLink =
-    "https://github.com/login/oauth/authorize?client_id=" ++ client_id
+    "http://localhost:8001/login/github"
+
+
+getAccessToken : Cmd Msg
+getAccessToken =
+    Http.get
+        { url = githubOAuthLink
+        , expect = Http.expectString GotResponse
+        }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -80,7 +89,8 @@ init _ =
       , showTracker = True
       , githubOauth = Loading
       }
-    , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
+      -- , Http.get { url = githubOAuthLink, expect = Http.expectString GotResponse }
+    , Cmd.none
     )
 
 
@@ -97,7 +107,7 @@ update msg model =
         GotResponse (Ok result) ->
             let
                 _ =
-                    Debug.log "Successfully got message"
+                    Debug.log "Successfully got message" result
 
                 _ =
                     Debug.log result
@@ -107,7 +117,7 @@ update msg model =
         GotResponse (Err txt) ->
             let
                 _ =
-                    Debug.log "an error occured"
+                    Debug.log "an error occured" txt
             in
             ( { model | githubOauth = Failure }, Cmd.none )
 
@@ -126,6 +136,9 @@ update msg model =
                 , Cmd.none
                 )
 
+        GithubOauth ->
+            ( model, getAccessToken )
+
 
 
 -- views
@@ -135,6 +148,13 @@ view : Model -> Html Msg
 view model =
     div []
         [ css "tailwind.css"
+        , div [ class "flex w-screen items-center h-screen justify-center" ]
+            [ button
+                [ class "bg-red-900 text-white px-5 py-3 rounded-full text-lg shadow-xl"
+                , onClick GithubOauth
+                ]
+                [ text "Login with Github" ]
+            ]
         , div
             [ class "bg-gray-200" ]
             [ addEntertainment model.newPlaceholderTitle
