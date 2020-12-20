@@ -6,7 +6,7 @@
   "scripts": {
     "build:tailwindcss": "tailwindcss build ./src/styles.css -o ./src/tailwind.css",
     "build:elm": "cd src & elm make Main.elm --output=elm.js",
-    "dev": "elm-live src/Main.elm --port=8000 --pushstate -- --debug",
+    "dev": "elm-live src/Main.elm --port=8000 --pushstate -- --debug --output=elm.js",
     "electron": "electron electron.js"
   },
   "license": "ISC",

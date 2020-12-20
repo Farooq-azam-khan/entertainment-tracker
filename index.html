@@ -7,13 +7,19 @@
   <title>Rust and Elm</title>
   <meta name="description" content="Rust and Elm">
   <meta name="author" content="Relm">
+  <script src="elm.js"></script>
 
 
 </head>
 
 <body>
   <main id="elm-container"></main>
-  <script src="./index.js"></script>
+  <script>
+    const node = document.querySelector('#elm-container')
+    if (node) {
+      Elm.Main.init({ node })
+    }
+  </script>
 
 </body>
 
