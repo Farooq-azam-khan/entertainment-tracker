@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation exposing (Key, load, pushUrl)
+import Debug
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -111,7 +112,7 @@ init _ url key =
 
         token =
             case page of
-                Route.Login githubToken ->
+                Route.Login (Just githubToken) ->
                     Just (Token githubToken)
 
                 _ ->
@@ -172,10 +173,13 @@ update msg model =
                 _ =
                     Debug.log "url changed" url
 
+                newroute =
+                    Route.parseUrl url
+
                 _ =
-                    Debug.log "model" model
+                    Debug.log "parsed url" newroute
             in
-            ( model, Cmd.none )
+            ( { model | route = newroute }, Cmd.none )
 
 
 
@@ -188,9 +192,6 @@ view model =
         case model.route of
             Route.HomePage ->
                 "Home Page"
-
-            Route.LoginPage ->
-                "Login Page"
 
             Route.Login _ ->
                 "nothing to see here"
