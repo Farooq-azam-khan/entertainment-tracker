@@ -44,7 +44,7 @@ onUrlChange url =
         _ =
             Debug.log "changed url" url
     in
-    ShowTracker
+    UrlChanged url
 
 
 
@@ -65,6 +65,7 @@ type Msg
     | UpdateTitle String
     | CreateEntertainment
     | LinkClicked UrlRequest
+    | UrlChanged Url
 
 
 type alias Model =
@@ -166,6 +167,16 @@ update msg model =
                 Browser.External href ->
                     ( model, load href )
 
+        UrlChanged url ->
+            let
+                _ =
+                    Debug.log "url changed" url
+
+                _ =
+                    Debug.log "model" model
+            in
+            ( model, Cmd.none )
+
 
 
 -- view
@@ -189,6 +200,8 @@ view model =
     , body =
         [ div []
             [ css "http://localhost:8000/tailwind.css"
+            , a [ href "/login", class "px-2 py-2 hover:bg-shadow-xl" ] [ text "login" ]
+            , a [ href "/" ] [ text "home" ]
             , showGithubButton model
             , div
                 [ class "bg-gray-200" ]
