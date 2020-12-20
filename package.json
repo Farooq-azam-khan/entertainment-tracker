@@ -6,11 +6,13 @@
   "scripts": {
     "build:tailwindcss": "tailwindcss build ./src/styles.css -o ./src/tailwind.css",
     "build:elm": "cd src & elm make Main.elm --output=elm.js",
-    "dev": "parcel ./src/index.html",
+    "dev": "elm-live src/Main.elm --port=8000 --pushstate -- --debug --output=index.js",
     "electron": "electron electron.js"
   },
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "elm-live": "^4.0.2"
+  },
   "devDependencies": {
     "autoprefixer": "^10.1.0",
     "electron": "^11.1.0",
