@@ -1,3 +1,4 @@
 MY_SECRET = "this is a secrect that i will take to my grave"
 GITHUB_CLIENT_ID = asdf
-GITHUB_CLIENT_SECRET = asdfDATABASE_URL= postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
+GITHUB_CLIENT_SECRET = asdf
+DATABASE_URL= postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
