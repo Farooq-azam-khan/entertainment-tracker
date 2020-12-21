@@ -12,3 +12,4 @@ dotenv = "0.15.0"
 reqwest = { version = "0.10", features = ["blocking", "json"] }
 tokio = { version = "0.2", features = ["full"] }
 rocket_cors = "0.5.1"
+postgres = "0.18.1"
