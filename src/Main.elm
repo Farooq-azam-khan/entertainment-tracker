@@ -236,19 +236,6 @@ view model =
         [ div []
             [ css "http://localhost:8000/tailwind.css"
             , showGithubButton model
-            , div
-                [ class "bg-gray-200" ]
-                [ addEntertainment model.newPlaceholderTitle
-                , if model.showTracker then
-                    showTracker model.tracker
-
-                  else
-                    button
-                        [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
-                        , onClick ShowTracker
-                        ]
-                        [ text "Show Tracker" ]
-                ]
             ]
         ]
     }
