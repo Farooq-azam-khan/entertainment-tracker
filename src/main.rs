@@ -2,10 +2,11 @@
 
 #[macro_use]
 extern crate rocket;
-use postgres::{Client, Error, NoTls};
-use reqwest::header::USER_AGENT;
-use rocket::response::content;
-use rocket::response::Redirect;
+//use postgres::{Client, Error, NoTls};
+//use reqwest::header::USER_AGENT;
+//use rocket::response::content;
+//use rocket::response::Redirect;
+use rocket::State; 
 use serde::{Deserialize, Serialize};
 
 extern crate dotenv;
@@ -13,7 +14,7 @@ extern crate dotenv;
 use dotenv::dotenv;
 use std::env;
 
-use std::collections::HashMap;
+//use std::collections::HashMap;
 
 #[get("/my-secret")]
 fn get_secret() -> String {
@@ -30,13 +31,14 @@ fn index() -> &'static str {
         "Hello, World"
 }
 
-fn get_client() -> Result<Client, Error> {
+/*fn get_client() -> Result<Client, Error> {
         Ok(Client::connect(
                 env::var("DATABASE_URL").unwrap().as_str(),
                 NoTls,
         )?)
-}
-fn connect_to_database() -> Result<(), Error> {
+}*/
+/*
+ * fn connect_to_database() -> Result<(), Error> {
         let result_client = get_client();
         match result_client {
                 Ok(mut client) => client.batch_execute(
@@ -52,7 +54,7 @@ fn connect_to_database() -> Result<(), Error> {
                 Err(_) => println!("was not able to connect to client"),
         };
         Ok(())
-}
+}*/
 
 // TODO: use std::sync::atomic::AtomicUsize; 
 struct HitCount {
@@ -66,7 +68,7 @@ fn count(hit_count: State<HitCount>) -> String {
 fn main() {
         dotenv().ok();
 
-        connect_to_database();
+        //connect_to_database();
         rocket::ignite()
                 .manage(HitCount {count: 0})
                 .mount(
