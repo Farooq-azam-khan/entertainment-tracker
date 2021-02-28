@@ -3,21 +3,36 @@
 #[cfg(test)] 
 mod tests; 
 
+
+extern crate dotenv; 
+
 #[macro_use]
 extern crate rocket;
-//use postgres::{Client, Error, NoTls};
+
+use dotenv::dotenv; 
+use std::env;
+
+pub mod book;
+
+pub mod models; 
+
+
+/* pub fn establish_connection() -> PgConnection {
+    dotenv().ok(); 
+
+    let database_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set");
+
+    PgConnection::establish(&database_url)
+        .expect(&format!("Error connecting to {}", database_url)) 
+}*/
+
 //use reqwest::header::USER_AGENT;
 use rocket::response::content;
 //use rocket::response::Redirect;
 use rocket::State; 
-//use serde::{Deserialize, Serialize};
 
-//extern crate dotenv;
 use std::sync::atomic::{AtomicUsize, Ordering};
-//use dotenv::dotenv;
-//use std::env;
-
-//use std::collections::HashMap;
 
 struct HitCount(AtomicUsize); 
 /* #[get("/my-secret")]
@@ -38,31 +53,6 @@ fn index(hit_count: State<'_, HitCount>) -> content::Html<String> {
     content::Html(format!("{}<br/>{}", msg, count))
 }
 
-/*fn get_client() -> Result<Client, Error> {
-        Ok(Client::connect(
-                env::var("DATABASE_URL").unwrap().as_str(),
-                NoTls,
-        )?)
-}*/
-/*
- * fn connect_to_database() -> Result<(), Error> {
-        let result_client = get_client();
-        match result_client {
-                Ok(mut client) => client.batch_execute(
-                        "
-                        CREATE TABLE user IF NOT EXISTS (
-                                id SERIAL PRIMARY KEY, 
-                                name VARCHAR(200), 
-                                email VARCHAR(400), 
-                                access_token VARCHAR(500)
-                        )
-                ",
-                )?,
-                Err(_) => println!("was not able to connect to client"),
-        };
-        Ok(())
-}*/
-
 
 #[get("/count")]
 fn count(hit_count: State<HitCount>) -> String {
@@ -71,7 +61,12 @@ fn count(hit_count: State<HitCount>) -> String {
 
 fn main() {
     rocket::ignite()
-       .mount("/", routes![index, count])
-        .manage(HitCount(AtomicUsize::new(0)))
-        .launch();
+                .mount("/", routes![
+                    index, count, 
+                    book::list, 
+                    // book::new, book::insert, book::update, book::delete
+                ])
+                .manage(HitCount(AtomicUsize::new(0)))
+                .launch();    
 }
+
