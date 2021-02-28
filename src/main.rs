@@ -1,34 +1,41 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+#[cfg(test)] 
+mod tests; 
+
 #[macro_use]
 extern crate rocket;
 //use postgres::{Client, Error, NoTls};
 //use reqwest::header::USER_AGENT;
-//use rocket::response::content;
+use rocket::response::content;
 //use rocket::response::Redirect;
 use rocket::State; 
-use serde::{Deserialize, Serialize};
+//use serde::{Deserialize, Serialize};
 
-extern crate dotenv;
-
-use dotenv::dotenv;
-use std::env;
+//extern crate dotenv;
+use std::sync::atomic::{AtomicUsize, Ordering};
+//use dotenv::dotenv;
+//use std::env;
 
 //use std::collections::HashMap;
 
-#[get("/my-secret")]
+struct HitCount(AtomicUsize); 
+/* #[get("/my-secret")]
 fn get_secret() -> String {
         String::from(env::var("MY_SECRET").unwrap().as_str())
-}
+}*/
 
-#[derive(Deserialize, Serialize, Debug)]
+/*#[derive(Deserialize, Serialize, Debug)]
 struct User {
         name: String,
         email: Option<String>,
-}
+}*/
 #[get("/")]
-fn index() -> &'static str {
-        "Hello, World"
+fn index(hit_count: State<'_, HitCount>) -> content::Html<String> {
+    hit_count.0.fetch_add(1, Ordering::Relaxed); 
+    let msg = "Your visit has been recorded!"; 
+    let count = format!("Visit: {}", count(hit_count)); 
+    content::Html(format!("{}<br/>{}", msg, count))
 }
 
 /*fn get_client() -> Result<Client, Error> {
@@ -56,26 +63,15 @@ fn index() -> &'static str {
         Ok(())
 }*/
 
-// TODO: use std::sync::atomic::AtomicUsize; 
-struct HitCount {
-    count: usize 
-}
+
 #[get("/count")]
 fn count(hit_count: State<HitCount>) -> String {
-    format!("Number of visits: {}", hit_count.count)
+    hit_count.0.load(Ordering::Relaxed).to_string()
 }
 
 fn main() {
-        dotenv().ok();
-
-        //connect_to_database();
-        rocket::ignite()
-                .manage(HitCount {count: 0})
-                .mount(
-                        "/",
-                        routes![
-                                index,
-                        ]
-                      )
-                .launch();
+    rocket::ignite()
+       .mount("/", routes![index, count])
+        .manage(HitCount(AtomicUsize::new(0)))
+        .launch();
 }
