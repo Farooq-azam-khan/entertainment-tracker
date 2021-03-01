@@ -1,18 +1,14 @@
 use crate::models::*;
-use rocket::response::content; 
-use rocket::State; 
+//use rocket::response::content; 
+use crate::schema::*; 
+use diesel::prelude::*; 
+use rocket_contrib::json::Json; 
 
 #[get("/books")]
-pub fn list() -> String {
-    let mut db = get_client(); 
-    let books = db.query("SELECT id, name FROM book", &[])
-        .expect("idk what happened");
-
-    for row in books {
-        let id: i32 = row.get(0); 
-        let name: &str = row.get(1); 
-        println!("books: {}, {}", id, name); 
-    }
-        
-    format!("need to return json") 
+pub fn list() -> Json<Vec<Book>> {
+    let books: Vec<Book> = book::table
+        .select(book::all_columns)
+        .load::<Book>(&crate::establish_connection())
+        .expect("Could not get all books");
+    Json(books) 
 }

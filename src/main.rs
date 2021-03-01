@@ -9,15 +9,21 @@ extern crate dotenv;
 #[macro_use]
 extern crate rocket;
 
-use dotenv::dotenv; 
-use std::env;
+#[macro_use]
+extern crate diesel; 
+
+pub mod models; 
+pub mod schema; 
 
 pub mod book;
 
-pub mod models; 
+use diesel::pg::PgConnection;
+use diesel::Connection; 
+use dotenv::dotenv; 
+use std::env;
 
 
-/* pub fn establish_connection() -> PgConnection {
+pub fn establish_connection() -> PgConnection {
     dotenv().ok(); 
 
     let database_url = env::var("DATABASE_URL")
@@ -25,7 +31,7 @@ pub mod models;
 
     PgConnection::establish(&database_url)
         .expect(&format!("Error connecting to {}", database_url)) 
-}*/
+}
 
 //use reqwest::header::USER_AGENT;
 use rocket::response::content;

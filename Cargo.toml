@@ -8,10 +8,14 @@ edition = "2018"
 
 [dependencies]
 rocket = "0.4.6"
+diesel = { version = "1.4.4", features = ["postgres"] } 
 dotenv = "0.15.0"
 reqwest = { version = "0.10", features = ["blocking", "json"] }
-tokio = { version = "0.2", features = ["full"] }
 rocket_cors = "0.5.1"
-postgres = "0.18.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+[dependencies.rocket_contrib]
+version = "0.4.7"
+default-features = false
+features = ["json"]

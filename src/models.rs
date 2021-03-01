@@ -1,25 +1,18 @@
-use serde::{Serialize}; 
-use dotenv::dotenv; 
+use crate::schema::*; 
 
-use postgres::{Client, NoTls};
-use std::env; 
+use serde::Serialize; 
 
-#[derive(Debug, Serialize)]
+
+#[derive(Debug, Serialize, Queryable)]
 pub struct Book {
     pub id: i32, 
-    pub name: String
+    pub title: String
 }
 
-pub struct Database {
-   pub pg: Client
-}
-
-pub fn get_client() -> Client {
-    dotenv().ok();
-    let db_url = env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set"); 
-    Client::connect(db_url.as_str(), NoTls,)
-        .expect(&format!("Error connecting to database"))
+#[derive(Debug, Insertable)]
+#[table_name="book"]
+pub struct NewBook<'x> {
+    pub title: &'x str
 }
 
 
