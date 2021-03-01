@@ -12,3 +12,13 @@ pub fn list() -> Json<Vec<Book>> {
         .expect("Could not get all books");
     Json(books) 
 }
+
+#[post("/books", format="json", data="<new_book>")]
+pub fn create_book(new_book: Json<NewBook>) -> Json<String> {
+    let insert = diesel::insert_into(book::table)
+        .values(new_book.into_inner()).execute(&crate::establish_connection()); 
+    match insert {
+        Ok(val) => Json(format!("added book")),
+        Err(_) => Json(format!("an error occured"))
+    }
+}

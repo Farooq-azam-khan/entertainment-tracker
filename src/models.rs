@@ -1,6 +1,6 @@
 use crate::schema::*; 
 
-use serde::Serialize; 
+use serde::{Serialize, Deserialize};
 
 
 #[derive(Debug, Serialize, Queryable)]
@@ -9,10 +9,10 @@ pub struct Book {
     pub title: String
 }
 
-#[derive(Debug, Insertable)]
+#[derive(Debug, Deserialize, Insertable)]
 #[table_name="book"]
-pub struct NewBook<'x> {
-    pub title: &'x str
+pub struct NewBook {
+    pub title: String
 }
 
 

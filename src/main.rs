@@ -70,6 +70,7 @@ fn main() {
                 .mount("/", routes![
                     index, count, 
                     book::list, 
+                    book:: create_book,
                     // book::new, book::insert, book::update, book::delete
                 ])
                 .manage(HitCount(AtomicUsize::new(0)))
