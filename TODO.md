@@ -4,7 +4,10 @@
     * [ ] lifetime
     * [ ] struct/ enums / traits
 
-* [ ] implement diesel starup with rust
+* [x] implement diesel starup with rust
 * [ ] create a test framework 
 * [ ] buildprocess for compiling elm and integrating into universal root
+* [ ] unique, not null book titles 
+* [ ] authors table
+* [ ] foreign key authors with books 
 
