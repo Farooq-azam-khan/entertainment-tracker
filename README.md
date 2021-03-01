@@ -17,4 +17,5 @@
 - deploy to staging for heroku
 - database: local postgresql for dev, heroku postgresql for staging, and ?? for production
 - choose a production platform (aws, google cloud, digital ocean)
+- docker files for `rust` server, `postgres` (Dockerfile, docker-compose.yml)
 
