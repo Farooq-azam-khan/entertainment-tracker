@@ -1,64 +1,49 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-#[cfg(test)] 
-mod tests; 
+#[cfg(test)]
+mod tests;
 
-
-extern crate dotenv; 
+extern crate dotenv;
 
 #[macro_use]
 extern crate rocket;
 
 #[macro_use]
-extern crate diesel; 
+extern crate diesel;
 
-pub mod models; 
-pub mod schema; 
-
+pub mod author;
 pub mod book;
+pub mod models;
+pub mod schema;
 
 use diesel::pg::PgConnection;
-use diesel::Connection; 
-use dotenv::dotenv; 
+use diesel::Connection;
+use dotenv::dotenv;
 use std::env;
 
-
 pub fn establish_connection() -> PgConnection {
-    dotenv().ok(); 
+    dotenv().ok();
 
-    let database_url = env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set");
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    PgConnection::establish(&database_url)
-        .expect(&format!("Error connecting to {}", database_url)) 
+    PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
-//use reqwest::header::USER_AGENT;
 use rocket::response::content;
-//use rocket::response::Redirect;
-use rocket::State; 
+
+use rocket::State;
 
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-struct HitCount(AtomicUsize); 
-/* #[get("/my-secret")]
-fn get_secret() -> String {
-        String::from(env::var("MY_SECRET").unwrap().as_str())
-}*/
+struct HitCount(AtomicUsize);
 
-/*#[derive(Deserialize, Serialize, Debug)]
-struct User {
-        name: String,
-        email: Option<String>,
-}*/
 #[get("/")]
 fn index(hit_count: State<'_, HitCount>) -> content::Html<String> {
-    hit_count.0.fetch_add(1, Ordering::Relaxed); 
-    let msg = "Your visit has been recorded!"; 
-    let count = format!("Visit: {}", count(hit_count)); 
+    hit_count.0.fetch_add(1, Ordering::Relaxed);
+    let msg = "Your visit has been recorded!";
+    let count = format!("Visit: {}", count(hit_count));
     content::Html(format!("{}<br/>{}", msg, count))
 }
-
 
 #[get("/count")]
 fn count(hit_count: State<HitCount>) -> String {
@@ -67,13 +52,17 @@ fn count(hit_count: State<HitCount>) -> String {
 
 fn main() {
     rocket::ignite()
-                .mount("/", routes![
-                    index, count, 
-                    book::list, 
-                    book:: create_book,
-                    // book::new, book::insert, book::update, book::delete
-                ])
-                .manage(HitCount(AtomicUsize::new(0)))
-                .launch();    
+        .mount(
+            "/",
+            routes![
+                index,
+                count,
+                book::list,
+                book::create_book,
+                author::list_authors,
+                author::create_author,
+            ],
+        )
+        .manage(HitCount(AtomicUsize::new(0)))
+        .launch();
 }
-
