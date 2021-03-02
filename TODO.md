@@ -10,5 +10,4 @@
 * [ ] unique, not null book titles 
 * [ ] authors table
 * [ ] foreign key authors with books 
-* [ ] look into git/rebase for better commit history
 
