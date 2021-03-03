@@ -7,6 +7,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
+import Json.Decode as D exposing (Decoder, field, int, map5, string)
 import Route exposing (Route)
 import Types exposing (..)
 import Url exposing (Url)
@@ -70,26 +71,17 @@ subscriptions model =
 
 
 type Msg
-    = ShowTracker
-    | UpdateTitle String
-    | CreateEntertainment
-    | LinkClicked UrlRequest
+    = LinkClicked UrlRequest
     | UrlChanged Url
+    | GetBooks (Result Http.Error (List Book))
 
 
 type alias Model =
-    { tracker : List Entertainment
-    , showTracker : Bool
-    , token : Maybe Token
-    , newPlaceholderTitle : String
+    { token : Maybe Token
     , key : Key
     , route : Route
+    , books : List Book
     }
-
-
-gameOfThrones : Entertainment
-gameOfThrones =
-    Book "Game of Thrones" (createAuthor "George" "Martin")
 
 
 client_id : String
@@ -109,78 +101,64 @@ githubOAuthLink =
 init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
     let
-        _ =
-            Debug.log "flags" flags
-
-        -- _ =
-        --     Debug.log "the url" url
-        page =
-            Route.parseUrl url
-
-        -- _ =
-        --     Debug.log "at init parsed url" page
-        token =
-            case page of
-                Route.Login (Just githubToken) ->
-                    Just (Token githubToken)
-
-                _ ->
-                    case flags.storedToken of
-                        Just githubToken ->
-                            Just (Token githubToken)
-
-                        Nothing ->
-                            Nothing
-
+        -- page =
+        --     Route.parseUrl url
+        -- token =
+        --     case page of
+        --         Route.Login (Just githubToken) ->
+        --             Just (Token githubToken)
+        --         _ ->
+        --             case flags.storedToken of
+        --                 Just githubToken ->
+        --                     Just (Token githubToken)
+        --                 Nothing ->
+        --                     Nothing
         model =
-            { newPlaceholderTitle = ""
-            , route = Route.parseUrl url
-            , tracker = []
-            , showTracker = False
-            , token = token
+            { route = Route.parseUrl url
+            , token = Nothing -- token
             , key = key
+            , books = []
             }
 
-        _ =
-            Debug.log "initial model" model
-
-        commands =
-            case token of
-                Just (Token tok) ->
-                    let
-                        _ =
-                            Debug.log "sending token to storage" tok
-                    in
-                    sendTokenToStorage tok
-
-                Nothing ->
-                    Cmd.none
+        -- commands =
+        --     case token of
+        --         Just (Token tok) ->
+        --             sendTokenToStorage tok
+        --         Nothing ->
+        --             Cmd.none
     in
     ( model
-    , commands
+    , Cmd.batch [ getBooksCommand ]
     )
+
+
+bookDecoder : Decoder Book
+bookDecoder =
+    map5 Book (field "id" int) (field "title" string) (field "author_id" int) (field "total_pages" int) (field "total_chapters" int)
+
+
+getBooksCommand : Cmd Msg
+getBooksCommand =
+    Http.get
+        { url = "/api/api/books"
+        , expect = Http.expectJson GetBooks (D.list bookDecoder)
+        }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ShowTracker ->
-            ( { model | showTracker = True }, Cmd.none )
+        GetBooks result ->
+            let
+                _ =
+                    Debug.log "result" result
+            in
+            case result of
+                Ok data ->
+                    ( { model | books = data }, Cmd.none )
 
-        UpdateTitle value ->
-            ( { model | newPlaceholderTitle = value }, Cmd.none )
-
-        CreateEntertainment ->
-            if String.length model.newPlaceholderTitle == 0 then
-                ( model, Cmd.none )
-
-            else
-                ( { model
-                    | newPlaceholderTitle = ""
-                    , tracker = List.append model.tracker [ createBook model.newPlaceholderTitle (createAuthor "random fn" "random ln") ]
-                  }
-                , Cmd.none
-                )
+                Err _ ->
+                    ( model, Cmd.none )
 
         LinkClicked url ->
             let
@@ -230,15 +208,23 @@ view model =
             Route.Login _ ->
                 "Login Oauth"
 
+            Route.BookPage ->
+                "Book Page"
+
             Route.NotFound ->
                 "Page not found"
     , body =
         [ div []
             [ css "http://localhost:8000/tailwind.css"
-            , showGithubButton model
+            , div [] (List.map showBook model.books)
             ]
         ]
     }
+
+
+showBook : Book -> Html Msg
+showBook book =
+    h2 [] [ text book.title ]
 
 
 showGithubButton : Model -> Html Msg
@@ -255,60 +241,6 @@ showGithubButton model =
                     ]
                     [ text "Login with Github" ]
                 ]
-
-
-addEntertainment : String -> Html Msg
-addEntertainment newPlaceholderTitle =
-    div [ class "flex space-x-2 justify-center rounded-md" ]
-        [ div [] [ input [ class "px-3 rounded-md w-full h-full", placeholder "Title", value newPlaceholderTitle, onInput UpdateTitle ] [] ]
-        , button
-            [ class "bg-gray-900 text-white px-2 py-1 rounded-md text-md"
-            , onClick CreateEntertainment
-            ]
-            [ text "Add Entertainmet" ]
-        ]
-
-
-showTracker : List Entertainment -> Html Msg
-showTracker tracker =
-    div [ class "mt-10 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4" ]
-        (List.map
-            renderEntertainment
-            tracker
-        )
-
-
-badge : String -> Html Msg
-badge t =
-    span [ class "flex items-center justify-center bg-green-200 text-green-900 rounded-full px-2 py-1 text-sm font-semibold" ] [ text t ]
-
-
-renderEntertainment : Entertainment -> Html Msg
-renderEntertainment enter =
-    div [ class "bg-white shadow-md px-2 py-1 rounded-md" ]
-        [ case enter of
-            Book title author ->
-                div [ class "flex flex-row sm:flex-col sm:space-y-1 space-x-2 align-baseline justify-between px-1" ]
-                    [ span [ class "flex space-x-3" ]
-                        [ badge "Book"
-                        , span [] [ text title ]
-                        ]
-                    , a
-                        [ class "underline text-indigo-900"
-                        , href "#"
-                        ]
-                        [ text (authorFullName author) ]
-                    ]
-
-            Movie title ->
-                div [] [ text "Movie:", text title ]
-
-            Play title _ ->
-                div [] [ text title ]
-
-            TV title ->
-                div [] [ text title ]
-        ]
 
 
 port sendTokenToStorage : String -> Cmd msg
