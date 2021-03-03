@@ -15,9 +15,10 @@
 
 ## Things to Figure out
 * [x] connect to database
-- elm interop with js
-- google and github oauth
-- deploy to staging for heroku
+* [x] elm interop with js
+- google ouath 
+- github oauth
+* [ ] implement `juniper` graphql library on the backend 
 - database: local postgresql for dev, heroku postgresql for staging, and ?? for production
 - choose a production platform (s3, aws, google cloud, digital ocean)
 - docker files for `rust` server, `postgres` (Dockerfile, docker-compose.yml)
