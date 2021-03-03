@@ -1,0 +1,263 @@
+base64 v0.9.3
+└── hyper v0.10.16
+    └── rocket_http v0.4.7
+        ├── rocket v0.4.7
+        │   ├── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+        │   ├── rocket_contrib v0.4.7
+        │   │   └── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+        │   └── rocket_cors v0.5.2
+        │       └── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+        └── rocket_codegen v0.4.7 (proc-macro)
+            └── rocket v0.4.7 (*)
+
+base64 v0.12.3
+├── cookie v0.11.3
+│   └── rocket_http v0.4.7 (*)
+└── rocket v0.4.7 (*)
+
+base64 v0.13.0
+└── reqwest v0.10.10
+    └── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+
+bytes v0.5.6
+├── h2 v0.2.7
+│   └── hyper v0.13.10
+│       ├── hyper-tls v0.4.3
+│       │   └── reqwest v0.10.10 (*)
+│       └── reqwest v0.10.10 (*)
+├── http-body v0.3.1
+│   ├── hyper v0.13.10 (*)
+│   └── reqwest v0.10.10 (*)
+├── hyper v0.13.10 (*)
+├── hyper-tls v0.4.3 (*)
+├── reqwest v0.10.10 (*)
+├── tokio v0.2.25
+│   ├── h2 v0.2.7 (*)
+│   ├── hyper v0.13.10 (*)
+│   ├── hyper-tls v0.4.3 (*)
+│   ├── reqwest v0.10.10 (*)
+│   ├── tokio-tls v0.3.1
+│   │   ├── hyper-tls v0.4.3 (*)
+│   │   └── reqwest v0.10.10 (*)
+│   └── tokio-util v0.3.1
+│       └── h2 v0.2.7 (*)
+└── tokio-util v0.3.1 (*)
+
+bytes v1.0.1
+└── http v0.2.3
+    ├── h2 v0.2.7 (*)
+    ├── http-body v0.3.1 (*)
+    ├── hyper v0.13.10 (*)
+    └── reqwest v0.10.10 (*)
+
+cfg-if v0.1.10
+├── mio v0.6.23
+│   ├── mio-extras v2.0.6
+│   │   └── notify v4.0.15
+│   │       └── rocket_contrib v0.4.7 (*)
+│   ├── notify v4.0.15 (*)
+│   └── tokio v0.2.25 (*)
+├── net2 v0.2.37
+│   └── mio v0.6.23 (*)
+└── polyval v0.3.3
+    └── ghash v0.2.3
+        └── aes-gcm v0.5.0
+            └── cookie v0.11.3 (*)
+
+cfg-if v1.0.0
+├── encoding_rs v0.8.28
+│   └── reqwest v0.10.10 (*)
+├── filetime v0.2.14
+│   └── notify v4.0.15 (*)
+├── getrandom v0.1.16
+│   ├── rand v0.7.3
+│   │   └── cookie v0.11.3 (*)
+│   └── rand_core v0.5.1
+│       ├── rand v0.7.3 (*)
+│       └── rand_chacha v0.2.2
+│           └── rand v0.7.3 (*)
+├── log v0.4.14
+│   ├── log v0.3.9
+│   │   ├── hyper v0.10.16 (*)
+│   │   └── mime v0.2.6
+│   │       └── hyper v0.10.16 (*)
+│   ├── mio v0.6.23 (*)
+│   ├── mio-extras v2.0.6 (*)
+│   ├── native-tls v0.2.7
+│   │   ├── hyper-tls v0.4.3 (*)
+│   │   ├── reqwest v0.10.10 (*)
+│   │   └── tokio-tls v0.3.1 (*)
+│   ├── reqwest v0.10.10 (*)
+│   ├── rocket v0.4.7 (*)
+│   ├── rocket_contrib v0.4.7 (*)
+│   ├── rocket_cors v0.5.2 (*)
+│   ├── tokio-util v0.3.1 (*)
+│   ├── tracing v0.1.25
+│   │   ├── h2 v0.2.7 (*)
+│   │   ├── hyper v0.13.10 (*)
+│   │   └── tracing-futures v0.2.5
+│   │       └── h2 v0.2.7 (*)
+│   └── want v0.3.0
+│       └── hyper v0.13.10 (*)
+├── openssl v0.10.32
+│   └── native-tls v0.2.7 (*)
+├── socket2 v0.3.19
+│   └── hyper v0.13.10 (*)
+└── tracing v0.1.25 (*)
+
+hyper v0.10.16 (*)
+
+hyper v0.13.10 (*)
+
+idna v0.1.5
+└── url v1.7.2
+    └── hyper v0.10.16 (*)
+
+idna v0.2.2
+└── url v2.2.1
+    ├── reqwest v0.10.10 (*)
+    └── rocket_cors v0.5.2 (*)
+
+log v0.3.9 (*)
+
+log v0.4.14 (*)
+
+mime v0.2.6 (*)
+
+mime v0.3.16
+├── mime_guess v2.0.3
+│   └── reqwest v0.10.10 (*)
+└── reqwest v0.10.10 (*)
+
+percent-encoding v1.0.1
+├── rocket_http v0.4.7 (*)
+└── url v1.7.2 (*)
+
+percent-encoding v2.1.0
+├── cookie v0.11.3 (*)
+├── form_urlencoded v1.0.1
+│   ├── serde_urlencoded v0.7.0
+│   │   └── reqwest v0.10.10 (*)
+│   └── url v2.2.1 (*)
+├── reqwest v0.10.10 (*)
+└── url v2.2.1 (*)
+
+pin-project-lite v0.1.11
+├── tokio v0.2.25 (*)
+└── tokio-util v0.3.1 (*)
+
+pin-project-lite v0.2.4
+├── futures-util v0.3.13
+│   ├── h2 v0.2.7 (*)
+│   ├── hyper v0.13.10 (*)
+│   └── reqwest v0.10.10 (*)
+├── reqwest v0.10.10 (*)
+└── tracing v0.1.25 (*)
+
+proc-macro2 v0.4.30
+├── devise_core v0.2.0
+│   ├── devise v0.2.0
+│   │   └── rocket_codegen v0.4.7 (proc-macro) (*)
+│   └── devise_codegen v0.2.0 (proc-macro)
+│       └── devise v0.2.0 (*)
+├── pear_codegen v0.1.4 (proc-macro)
+│   └── pear v0.1.4
+│       ├── rocket v0.4.7 (*)
+│       └── rocket_http v0.4.7 (*)
+├── quote v0.6.13
+│   ├── devise_codegen v0.2.0 (proc-macro) (*)
+│   ├── devise_core v0.2.0 (*)
+│   ├── pear_codegen v0.1.4 (proc-macro) (*)
+│   ├── rocket_codegen v0.4.7 (proc-macro) (*)
+│   └── syn v0.15.44
+│       ├── devise_core v0.2.0 (*)
+│       └── pear_codegen v0.1.4 (proc-macro) (*)
+└── syn v0.15.44 (*)
+
+proc-macro2 v1.0.24
+├── diesel_derives v1.4.1 (proc-macro)
+│   └── diesel v1.4.5
+│       └── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+├── pin-project-internal v1.0.5 (proc-macro)
+│   └── pin-project v1.0.5
+│       ├── hyper v0.13.10 (*)
+│       └── tracing-futures v0.2.5 (*)
+├── quote v1.0.9
+│   ├── diesel_derives v1.4.1 (proc-macro) (*)
+│   ├── pin-project-internal v1.0.5 (proc-macro) (*)
+│   ├── serde_derive v1.0.123 (proc-macro)
+│   │   ├── rocket_cors v0.5.2 (*)
+│   │   └── serde v1.0.123
+│   │       ├── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+│   │       ├── reqwest v0.10.10 (*)
+│   │       ├── rocket_contrib v0.4.7 (*)
+│   │       ├── rocket_cors v0.5.2 (*)
+│   │       ├── serde_json v1.0.64
+│   │       │   ├── entertainment-tracker v0.1.0 (/mnt/c/Users/Farooq Khan/Desktop/dev/entertainment-tracker)
+│   │       │   ├── reqwest v0.10.10 (*)
+│   │       │   └── rocket_contrib v0.4.7 (*)
+│   │       ├── serde_urlencoded v0.7.0 (*)
+│   │       ├── toml v0.4.10
+│   │       │   └── rocket v0.4.7 (*)
+│   │       └── unicase_serde v0.1.0
+│   │           └── rocket_cors v0.5.2 (*)
+│   └── syn v1.0.60
+│       ├── diesel_derives v1.4.1 (proc-macro) (*)
+│       ├── pin-project-internal v1.0.5 (proc-macro) (*)
+│       └── serde_derive v1.0.123 (proc-macro) (*)
+├── serde_derive v1.0.123 (proc-macro) (*)
+└── syn v1.0.60 (*)
+
+quote v0.6.13 (*)
+
+quote v1.0.9 (*)
+
+subtle v1.0.0
+└── crypto-mac v0.7.0
+    └── hmac v0.7.1
+        ├── cookie v0.11.3 (*)
+        └── hkdf v0.8.0
+            └── cookie v0.11.3 (*)
+
+subtle v2.4.0
+├── aes-gcm v0.5.0 (*)
+└── universal-hash v0.3.0
+    └── polyval v0.3.3 (*)
+
+syn v0.15.44 (*)
+
+syn v1.0.60 (*)
+
+unicase v1.4.2
+└── hyper v0.10.16 (*)
+
+unicase v2.6.0
+├── mime_guess v2.0.3 (*)
+├── rocket_cors v0.5.2 (*)
+└── unicase_serde v0.1.0 (*)
+[build-dependencies]
+└── mime_guess v2.0.3 (*)
+
+unicode-xid v0.1.0
+├── proc-macro2 v0.4.30 (*)
+├── rocket_http v0.4.7 (*)
+└── syn v0.15.44 (*)
+
+unicode-xid v0.2.1
+├── proc-macro2 v1.0.24 (*)
+└── syn v1.0.60 (*)
+
+url v1.7.2 (*)
+
+url v2.2.1 (*)
+
+version_check v0.1.5
+[build-dependencies]
+└── unicase v1.4.2 (*)
+
+version_check v0.9.2
+[build-dependencies]
+├── pear_codegen v0.1.4 (proc-macro) (*)
+├── rocket v0.4.7 (*)
+├── rocket_codegen v0.4.7 (proc-macro) (*)
+└── unicase v2.6.0 (*)
