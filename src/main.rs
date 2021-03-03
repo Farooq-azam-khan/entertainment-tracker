@@ -1,10 +1,7 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-#[cfg(test)]
-mod tests;
-
+extern crate chrono;
 extern crate dotenv;
-
 #[macro_use]
 extern crate rocket;
 
@@ -14,6 +11,7 @@ extern crate diesel;
 pub mod author;
 pub mod book;
 pub mod models;
+pub mod reading_history;
 pub mod schema;
 
 use diesel::pg::PgConnection;
@@ -44,6 +42,8 @@ fn main() {
                 book::create_book,
                 author::list_authors,
                 author::create_author,
+                reading_history::list,
+                reading_history::create_reading_history
             ],
         )
         .mount("/", routes![index])
