@@ -9,6 +9,7 @@ type Route
     = NotFound
     | Login (Maybe String)
     | HomePage
+    | BookPage
 
 
 parseUrl : Url -> Route
@@ -24,6 +25,7 @@ parseUrl url =
 matchRoute : Parser (Route -> a) a
 matchRoute =
     Parser.oneOf
-        [ Parser.map HomePage (s "/home")
+        [ Parser.map HomePage (s "/")
+        , Parser.map BookPage (s "/books")
         , Parser.map Login (s "login" <?> Query.string "access_token")
         ]
