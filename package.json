@@ -6,17 +6,17 @@
   "scripts": {
     "build:tailwindcss": "tailwindcss build ./src/styles.css -o ./src/tailwind.css",
     "build:elm": "cd src & elm make Main.elm --output=elm.js",
-    "dev": "elm-live src/Main.elm --port=8000 --pushstate -- --debug --output=elm.js",
+    "dev": "elm-live src/Main.elm --port=8000 --pushstate --proxy-prefix=/api --proxy-host=http://localhost:8001 -- --debug --output=elm.js",
     "electron": "electron electron.js"
   },
   "license": "ISC",
-  "dependencies": {
-    "elm-live": "^4.0.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^10.1.0",
     "electron": "^11.1.0",
     "postcss": "^8.2.1",
-    "tailwindcss": "^2.0.2"
+    "tailwindcss": "^2.0.2",
+    "elm-live": "^4.0.2",
+    "elm": "^0.19.1-5"
   }
 }
